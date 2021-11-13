@@ -1,0 +1,140 @@
+---
+title: "Assignment 3"
+subtitle: "Assignment 3 i kurset Data Science 2021"
+author: 
+  - "Karoline Midtbø"
+  - "Morten Knutsen" 
+email: 
+  - "579729@stud.hvl.no" 
+  - "575413@stud.hvl.no"
+csl: apa-no-ampersand.csl
+fontsize: 12pt
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+  html_notebook: default  
+lang: nb-NO
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+```{r}
+library(readr)
+library(tibble)
+library(prettydoc)
+library(knitr)
+library(tidyverse)
+library(styler)
+library(dplyr)
+options(scipen = 999)
+```
+
+
+### Oppgave 1.
+
+    Filen ddf_concepts.csv inneholder informasjon om ulike konspeter som
+    skal måles i prosent, men inneholder ingen verdier. De ulike
+    konseptene er for eksempel voksne med hiv, arbeidsledighet, alder på
+    kvinner som gifter seg for første gang, antall nye rapporterte saker
+    og flere andre.
+
+### Oppgave 2.
+
+    Filen ddf--entities--geo--country.csv viser til flere ulike land,
+    men innholder ingen verdier her heller. De inkluderte land er
+    Australia, Kongo, Belgia, Østeriket og mange flere. Det er også vist til
+    hvilket kontigent de hører til.
+
+### Oppgave 3.
+
+    Filen ddf--entities--geo--un_sdg_region.csv inneholder ulike
+    land og hvilken region de hører til, og blir fremstilt som TRUE eller FALSE.
+
+### Oppgave 4.
+
+Gapminder inneholder variablene:
+
+1. Country: 142 
+2. Continent: 5 (Africa, Americas, Asia, Europe, Oceania )
+3. Year; 1952–2007
+4. lifeExp: le at birth in years
+5. pop: population
+6. gdbPercap: in US $, inflation-adjusted
+
+Australia og New Zeland ligger i Asia.
+
+### Oppgave 5.
+```{r g_c}
+g_c <- read_csv("/Users/karolinemidtbo/Documents/Data sience /Assignment 3/Ass3_h21/data/ddf--entities--geo--country.csv")
+print(g_c)
+```
+
+```{r varspecs}
+spec(g_c)
+```
+
+```{r Kontinent}
+g_c <- g_c %>%
+  mutate(continent = case_when(
+    world_4region == "asia" & un_sdg_region %in% 
+      c("un_australia_and_new_zealand", "un_oceania_exc_australia_and_new_zealand") ~ "Oceania",
+    world_4region == "asia" & !(un_sdg_region %in% 
+      c("un_australia_and_new_zealand", "un_oceania_exc_austalia_new_zealand")) ~ "Asia",
+    world_4region == "africa" ~ "Africa",
+    world_4region == "americas" ~ "Americas",
+    world_4region == "europe" ~ "Europe")
+  ) %>% 
+  filter(!is.na(iso3166_1_alpha3))
+```
+
+
+### Oppgave 6a.
+```{r Antall land}
+length(unique(g_c$country))
+```
+
+### Oppgave 6b.
+```{r Land per kontinent}
+g_c %>% 
+  group_by(continent) %>%
+  summarise(countries = length(unique(country)))
+```
+### Oppgave 7.
+
+```{r Life Expectancy}
+lifeExp <- read_csv("/Users/karolinemidtbo/Documents/Data sience /Assignment 3/Ass3_h21/data/countries-etc-datapoints/ddf--datapoints--life_expectancy_years--by--geo--time.csv", 
+  col_types = cols(time = col_date(format = "%Y")))
+lifeExp <- lifeExp %>% 
+  rename (year = time)
+length(unique(lifeExp$geo))
+names(lifeExp)
+```
+
+
+### Oppgave 8.
+```{r Informasjon }
+length(unique(lifeExp$geo))
+```
+
+Vi finne ut at det er 195 land som sitter med denne informasjonen.
+
+### Oppgave 9.
+
+```{r g_c ink lifeExp}
+g_c <- g_c %>%
+  select(country, name, iso3166_1_alpha3,un_sdg_region,world_4region,continent,world_6region) %>%
+  left_join(lifeExp, by = c("country" = "geo"))
+names(g_c)
+```
+
+### Oppgave 10.
+
+```{r First observation }
+g_c_min <- g_c %>% 
+group_by(country) %>%
+summarise(min_year = min(year))
+table(g_c_min$min_year)
+```
+
