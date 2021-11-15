@@ -63,7 +63,7 @@ Gapminder inneholder variablene:
 5. pop: population
 6. gdbPercap: in US $, inflation-adjusted
 
-Australia og New Zeland ligger i Asia.
+Australia og New Zealand ligger i Asia.
 
 ### Oppgave 5.
 ```{r g_c}
