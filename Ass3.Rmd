@@ -59,9 +59,13 @@ Gapminder inneholder variablene:
 5. pop: population
 6. gdbPercap: in US $, inflation-adjusted
 
+<<<<<<< HEAD
 
 
 Australia og New Zeland ligger i Asia i følge dette datasettet. 
+=======
+Australia og New Zealand ligger i Asia.
+>>>>>>> b6c594e660e843da7e43c63594c1b408f79a31c5
 
 ### Oppgave 5.
 ```{r g_c}
@@ -401,7 +405,6 @@ write.table(g_c, file="my_gapminder.csv", sep = ",")
 
 write.table(g_c_60, file="my_gapminder_red.csv", sep = ",")
 ```
-
 
 
 
