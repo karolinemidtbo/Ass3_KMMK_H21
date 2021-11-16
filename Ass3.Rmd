@@ -67,7 +67,7 @@ Australia og New Zealand ligger i Asia.
 
 ### Oppgave 5.
 ```{r g_c}
-g_c <- read_csv("/Users/karolinemidtbo/Documents/Data sience /Assignment 3/Ass3_h21/data/ddf--entities--geo--country.csv")
+g_c <- read_csv("data/ddf--entities--geo--country.csv")
 print(g_c)
 ```
 
@@ -104,7 +104,7 @@ g_c %>%
 ### Oppgave 7.
 
 ```{r Life Expectancy}
-lifeExp <- read_csv("/Users/karolinemidtbo/Documents/Data sience /Assignment 3/Ass3_h21/data/countries-etc-datapoints/ddf--datapoints--life_expectancy_years--by--geo--time.csv", 
+lifeExp <- read_csv("data/countries-etc-datapoints/ddf--datapoints--life_expectancy_years--by--geo--time.csv", 
   col_types = cols(time = col_date(format = "%Y")))
 lifeExp <- lifeExp %>% 
   rename (year = time)
@@ -137,4 +137,9 @@ group_by(country) %>%
 summarise(min_year = min(year))
 table(g_c_min$min_year)
 ```
+
+
+
+
+
 
