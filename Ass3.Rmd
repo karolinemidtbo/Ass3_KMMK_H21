@@ -59,13 +59,9 @@ Gapminder inneholder variablene:
 5. pop: population
 6. gdbPercap: in US $, inflation-adjusted
 
-<<<<<<< HEAD
 
 
-Australia og New Zeland ligger i Asia i følge dette datasettet. 
-=======
-Australia og New Zealand ligger i Asia.
->>>>>>> b6c594e660e843da7e43c63594c1b408f79a31c5
+Australia og New Zeland ligger i Asia i følge dette datasettet (ddf--entities--geo--country.csv).  
 
 ### Oppgave 5.
 ```{r g_c}
@@ -73,9 +69,13 @@ g_c <- read_csv("data/ddf--entities--geo--country.csv")
 print(g_c)
 ```
 
+Vi laster inn her datasettet geo country, der vi skal bruke dette til å skille ut Australia og New Zealand fra Asia til Oceani.
+
 ```{r varspecs}
 spec(g_c)
 ```
+
+
 
 ```{r Kontinent}
 g_c <- g_c %>%
@@ -91,11 +91,13 @@ g_c <- g_c %>%
   filter(!is.na(iso3166_1_alpha3))
 ```
 
+I denne chunken skiller vi ut Australia og New Zealand fra Asia til Oceania. 
 
 ### Oppgave 6a.
 ```{r Antall land}
 length(unique(g_c$country))
 ```
+Her viser vi til hvor mange land det er etter vi har skillet dem ut. Det er da 247 land. 
 
 ### Oppgave 6b.
 ```{r Land per kontinent}
@@ -103,6 +105,8 @@ g_c %>%
   group_by(continent) %>%
   summarise(countries = length(unique(country)))
 ```
+Her viser vi til hvor mange land det er per kontinent.
+
 ### Oppgave 7.
 
 ```{r Life Expectancy}
@@ -114,6 +118,7 @@ length(unique(lifeExp$geo))
 names(lifeExp)
 ```
 
+Her lager vi en variable som kalles life expectancy (lifeexpd)
 
 ### Oppgave 8.
 ```{r Informasjon }
@@ -131,19 +136,20 @@ g_c <- g_c %>%
 names(g_c)
 ```
 
+Vi begrenser hvilke variabler vi vil skal vises og legger til noen nye. 
+
 ### Oppgave 10.
 
-```{r First observation }
+```{r Første observvasjon hvert år }
 g_c_min <- g_c %>% 
 group_by(country) %>%
 summarise(min_year = min(year))
 table(g_c_min$min_year)
 ```
 
+Her ser en de første observasjonen for lifeExp. 
 
 ### Oppgave 11. 
-
-
 
 ```{r Life expectancy 1950}
 
@@ -154,8 +160,7 @@ g_c_min <- g_c_min %>%
 tibble(country = unique(g_c_min$name))
 ```
 
-Her har vi en oversikt på de landene som har data på forventet levealder fra og med 1950. Vi
-
+Her har vi en oversikt på de landene som har data på forventet levealder fra og med 1950. 
 
 
 ### Oppgave 12
@@ -166,11 +171,15 @@ pop <- read_csv("data/countries-etc-datapoints/ddf--datapoints--population_total
   time = col_date(format = "%Y")))
 ```
 
+Legge til et nytt datasett som skal brukes til i oppgavene videre. 
 
 ```{r left-join, pop}
 g_c <- g_c %>% 
   left_join(pop, by = c("country" = "geo", "year" = "time"))
 ```
+
+Vi legger til g_c i en left-join.
+
 
 ### Oppgave 13
 
@@ -180,7 +189,7 @@ col_types = cols(
   time = col_date(format = "%Y")))
 
 ```
-
+Vi legger til et datasett til. 
 
 
 ```{r left_join_gc}
@@ -188,7 +197,7 @@ g_c <- g_c %>%
   left_join(gdp_pc, by = c("country" = "geo", "year" = "time"))
 rm(gdp_pc)
 ```
-
+Tar en lef-join med g_c i dette datasettet også. 
 
 
 
@@ -200,7 +209,7 @@ g_c = g_c %>%
          gdpPercap = gdppercapita_us_inflation_adjusted)
 ```
 
-
+Endrer navnene i g_c datasettet. 
 
 ### Oppgave 14
 
@@ -216,19 +225,22 @@ g_c_5 <- g_c %>%
 dim(g_c_5)
 ```
 
+Her legger vi til ulike år som en skal bruke til å se på resultatene fra datasettet g_c/g_c_5. 
 
 
-```{r}
+```{r g_c_min}
 g_c_min <- g_c_5 %>%
 group_by(gdpPercap) %>%
 summarise(year_min = min(year))
 ```
+Legger til hva vi vil finne i neste chunk. 
 
 ```{r GDPeachcountry}
 g_c_min %>% 
 count(year_min = g_c_min$year_min)
 ```
 
+Finner første året gdp er registrert for hvert land. Tabellen legger her sammen tallene og får ikke rett svar. 
 
 ### Oppgave 15
 
@@ -240,6 +252,7 @@ g_c <- g_c %>%
   arrange((country))
 ```
 
+Legger inn datasettet for å finne observasjonen. 
 
 ```{r}
 g_c_60 <- g_c %>%
@@ -260,33 +273,36 @@ group_by(country) %>%
 summarise(min_year = min(year))
 ```
 
-```{r}
+Her lager vi et subset 
+
+
+```{r dim - nasjoner med registrert data}
 dim(c_min_y)
 ```
+Her er all registrert data fra 1960 til 209. 
 
-
-```{r}
+```{r c_min_y_60}
 c_min_y_60 <- c_min_y$country[c_min_y$min_year == "1960-01-01"]
 my_gapminder_1960 <- g_c_5 %>%
 filter(country %in% c_min_y_60)
 ```
 
-
-```{r}
+Lager en chunck for å få inn variablen c_min_y_60 
+```{r Observajsoner og variabler}
 # vi sjekker hvor mange observasjoner og variabler det er.
 dim(my_gapminder_1960)
 ```
 
 
 
-```{r}
+```{r Antall land}
 # her ser vi antall land som har refistrert data mellom 1960 og 2019
 length(unique(my_gapminder_1960$country))
 ```
 
 Her ser vi hvor mange NA observasjoner det er. 2754. 
 
-```{r }
+```{r gapminder}
 (num_NA <- my_gapminder_1960[is.na(my_gapminder_1960$gdpPercap) == TRUE, ])
 ```
 
@@ -296,9 +312,7 @@ Denne modellen er ikke så oversiktilig, så vi kan velge og ta i bruk paste() f
 ```{r antall NA}
 paste("Number of NAs in my_gapminder_1960 is", dim(num_NA)[1], sep = " ")
 ```
-
-
-
+"Number of NAs in my_gapminder_1960 is 2754"
 
 ```{r Antall land fra hvert kontinent}
 my_gapminder_1960 %>%
@@ -307,7 +321,7 @@ group_by(continent) %>%
 count() %>%
 kable()
 ```
-
+Viser til antall land per kontigent. 
 
 ### Oppgave 17
 
