@@ -10,8 +10,8 @@ email:
 csl: apa-no-ampersand.csl
 fontsize: 12pt
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
   html_document:
     df_print: paged
   html_notebook: default  
@@ -350,7 +350,7 @@ theme(legend.position = "bottom")
 ### Oppgave 18
 
 
-```{r 1960}
+```{r 1960log}
 my_gapminder_1960 %>%
 filter(year <= "1960-01-01") %>%
 ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
@@ -360,7 +360,7 @@ theme(legend.position = "bottom")
 ```
 
 
-```{r 1980}
+```{r 1980log}
 my_gapminder_1960 %>%
 filter(year <= "1980-01-01") %>%
 ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
@@ -369,7 +369,7 @@ coord_cartesian(ylim = c(20, 90), xlim = c(5,11)) +
 theme(legend.position = "bottom")
 ```
 
-```{r 2000}
+```{r 2000log}
 my_gapminder_1960 %>%
 filter(year <= "2000-01-01") %>%
 ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
@@ -378,7 +378,7 @@ coord_cartesian(ylim = c(20, 90), xlim = c(5,12)) +
 theme(legend.position = "bottom")
 ```
 
-```{r 2019}
+```{r 2019log}
 my_gapminder_1960 %>%
 filter(year <= "2019-01-01") %>%
 ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
@@ -396,7 +396,7 @@ Videre kan vi se at det er en positiv sammenheng mellom BNP og levealder. Noe so
 ### Oppgave 20
 
 
-```{r}
+```{r csv, red}
 write.table(g_c, file="my_gapminder.csv", sep = ",")
 
 write.table(g_c_60, file="my_gapminder_red.csv", sep = ",")
