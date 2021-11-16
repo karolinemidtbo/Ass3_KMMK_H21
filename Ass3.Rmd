@@ -139,6 +139,279 @@ table(g_c_min$min_year)
 ```
 
 
+### Oppgave 11. 
+
+
+
+```{r Life expectancy 1950}
+
+g_c_min <- g_c_min %>%
+  left_join(g_c,
+            by = "country") %>%
+  filter(min_year == "1950-01-01")
+tibble(country = unique(g_c_min$name))
+```
+
+Her har vi en oversikt på de landene som har data på forventet levealder fra og med 1950. Vi
+
+
+
+### Oppgave 12
+
+```{r read_in_total_population}
+pop <- read_csv("data/countries-etc-datapoints/ddf--datapoints--population_total--by--geo--time.csv", 
+  col_types = cols(
+  time = col_date(format = "%Y")))
+```
+
+
+```{r left-join, pop}
+g_c <- g_c %>% 
+  left_join(pop, by = c("country" = "geo", "year" = "time"))
+```
+
+### Oppgave 13
+
+```{r gdp_pc}
+gdp_pc <- read_csv("data/countries-etc-datapoints/ddf--datapoints--gdppercapita_us_inflation_adjusted--by--geo--time.csv",
+col_types = cols(
+  time = col_date(format = "%Y")))
+
+```
+
+
+
+```{r left_join_gc}
+g_c <- g_c %>% 
+  left_join(gdp_pc, by = c("country" = "geo", "year" = "time"))
+rm(gdp_pc)
+```
+
+
+
+
+```{r rename}
+
+g_c = g_c %>% 
+  rename(lifeExp = life_expectancy_years,
+         pop = population_total,
+         gdpPercap = gdppercapita_us_inflation_adjusted)
+```
+
+
+
+### Oppgave 14
+
+```{r g_c_5}
+t2 <- paste(c(seq(1800,2015, by = 5),2019),"01-01", sep = "-") %>%
+  parse_date(format = "%Y-%m-%d")
+
+
+g_c_5 <- g_c %>%
+  filter(year %in% t2) %>%
+  select(country, name, continent, year, lifeExp, pop, gdpPercap)
+
+dim(g_c_5)
+```
+
+
+
+```{r}
+g_c_min <- g_c_5 %>%
+group_by(gdpPercap) %>%
+summarise(year_min = min(year))
+```
+
+```{r GDPeachcountry}
+g_c_min %>% 
+count(year_min = g_c_min$year_min)
+```
+
+
+### Oppgave 15
+
+```{r Land med GDP}
+g_c <- g_c %>%
+  filter(!is.na(gdpPercap)) %>%
+  group_by(country) %>%
+  summarise(nr=n()) %>%
+  arrange((country))
+```
+
+
+```{r}
+g_c_60 <- g_c %>%
+  filter(nr > 60)
+```
+
+
+Vi får 84 observasjoner som har rappotert GDPperkap i 60 år eller mer. 
+
+
+
+### Oppgave 16 
+
+```{r subsett gapminder}
+c_min_y <- g_c_5 %>%
+filter(!is.na(gdpPercap)) %>%
+group_by(country) %>%
+summarise(min_year = min(year))
+```
+
+```{r}
+dim(c_min_y)
+```
+
+
+```{r}
+c_min_y_60 <- c_min_y$country[c_min_y$min_year == "1960-01-01"]
+my_gapminder_1960 <- g_c_5 %>%
+filter(country %in% c_min_y_60)
+```
+
+
+```{r}
+# vi sjekker hvor mange observasjoner og variabler det er.
+dim(my_gapminder_1960)
+```
+
+
+
+```{r}
+# her ser vi antall land som har refistrert data mellom 1960 og 2019
+length(unique(my_gapminder_1960$country))
+```
+
+Her ser vi hvor mange NA observasjoner det er. 2754. 
+
+```{r }
+(num_NA <- my_gapminder_1960[is.na(my_gapminder_1960$gdpPercap) == TRUE, ])
+```
+
+
+Denne modellen er ikke så oversiktilig, så vi kan velge og ta i bruk paste() funksjonen for å få frem svaret. 
+
+```{r antall NA}
+paste("Number of NAs in my_gapminder_1960 is", dim(num_NA)[1], sep = " ")
+```
+
+
+
+
+```{r Antall land fra hvert kontinent}
+my_gapminder_1960 %>%
+distinct(country, continent) %>%
+group_by(continent) %>%
+count() %>%
+kable()
+```
+
+
+### Oppgave 17
+
+
+```{r 1960}
+my_gapminder_1960 %>%
+filter(year <= "1960-01-01") %>%
+ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
+geom_point() +
+coord_cartesian(ylim = c(20, 90), xlim = c(0,10000)) +
+theme(legend.position = "bottom")
+```
+
+```{r 1980}
+my_gapminder_1960 %>%
+filter(year <= "1980-01-01") %>%
+ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
+geom_point() +
+coord_cartesian(ylim = c(20, 90), xlim = c(0,45000)) +
+theme(legend.position = "bottom")
+```
+
+```{r 2000}
+my_gapminder_1960 %>%
+filter(year <= "2000-01-01") %>%
+ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
+geom_point() +
+coord_cartesian(ylim = c(20, 90), xlim = c(0,95000)) +
+theme(legend.position = "bottom")
+```
+
+
+```{r 2019}
+my_gapminder_1960 %>%
+filter(year <= "2019-01-01") %>%
+ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
+geom_point() +
+coord_cartesian(ylim = c(20, 90), xlim = c(0,95000)) +
+theme(legend.position = "bottom")
+```
+
+
+
+### Oppgave 18
+
+
+```{r 1960}
+my_gapminder_1960 %>%
+filter(year <= "1960-01-01") %>%
+ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
+geom_point() +
+coord_cartesian(ylim = c(20, 90), xlim = c(5,11)) +
+theme(legend.position = "bottom")
+```
+
+
+```{r 1980}
+my_gapminder_1960 %>%
+filter(year <= "1980-01-01") %>%
+ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
+geom_point() +
+coord_cartesian(ylim = c(20, 90), xlim = c(5,11)) +
+theme(legend.position = "bottom")
+```
+
+```{r 2000}
+my_gapminder_1960 %>%
+filter(year <= "2000-01-01") %>%
+ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
+geom_point() +
+coord_cartesian(ylim = c(20, 90), xlim = c(5,12)) +
+theme(legend.position = "bottom")
+```
+
+```{r 2019}
+my_gapminder_1960 %>%
+filter(year <= "2019-01-01") %>%
+ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
+geom_point() +
+coord_cartesian(ylim = c(20, 90), xlim = c(5,12)) +
+theme(legend.position = "bottom")
+```
+
+### Oppgave 19
+
+Det første vi kan legge merke til er at antall land som har samlet inn data på forventet levealder og BNP har økt noe voldsomt, den største forskjellen ser vi fra 1960 til 1980. 
+
+Videre kan vi se at det er en positiv sammenheng mellom BNP og levealder. Noe som gir mening, da økt levestandard vil gi en økt levealder. Vi ser spesielt i Asia at det er land som har fått en økt levealder og BNP. Vi ser også at det er en utvikling i Afrika, men ikke like sterk som Asia. 
+
+### Oppgave 20
+
+
+```{r}
+write.table(g_c, file="my_gapminder.csv", sep = ",")
+
+write.table(g_c_60, file="my_gapminder_red.csv", sep = ",")
+```
+
+
+
+
+
+
+
+
+
 
 
 
