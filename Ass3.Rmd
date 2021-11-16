@@ -34,23 +34,19 @@ options(scipen = 999)
 
 ### Oppgave 1.
 
-    Filen ddf_concepts.csv inneholder informasjon om ulike konspeter som
-    skal måles i prosent, men inneholder ingen verdier. De ulike
-    konseptene er for eksempel voksne med hiv, arbeidsledighet, alder på
-    kvinner som gifter seg for første gang, antall nye rapporterte saker
-    og flere andre.
+Filen ddf_concepts.csv inneholder informasjon om ulike konspeter som skal måles i prosent, men inneholder ingen verdier. De ulike
+konseptene er for eksempel voksne med hiv, arbeidsledighet, alder på kvinner som gifter seg for første gang, antall nye rapporterte saker og flere andre.
 
 ### Oppgave 2.
 
-    Filen ddf--entities--geo--country.csv viser til flere ulike land,
-    men innholder ingen verdier her heller. De inkluderte land er
-    Australia, Kongo, Belgia, Østeriket og mange flere. Det er også vist til
-    hvilket kontigent de hører til.
+Filen ddf--entities--geo--country.csv viser til flere ulike land,
+men innholder ingen verdier her heller. De inkluderte land er
+Australia, Kongo, Belgia, Østeriket og mange flere. Det er også vist til hvilket kontigent de hører til.
 
 ### Oppgave 3.
 
-    Filen ddf--entities--geo--un_sdg_region.csv inneholder ulike
-    land og hvilken region de hører til, og blir fremstilt som TRUE eller FALSE.
+Filen ddf--entities--geo--un_sdg_region.csv inneholder ulike
+land og hvilken region de hører til, og blir fremstilt som TRUE eller FALSE.
 
 ### Oppgave 4.
 
@@ -63,7 +59,9 @@ Gapminder inneholder variablene:
 5. pop: population
 6. gdbPercap: in US $, inflation-adjusted
 
-Australia og New Zeland ligger i Asia.
+
+
+Australia og New Zeland ligger i Asia i følge dette datasettet. 
 
 ### Oppgave 5.
 ```{r g_c}
